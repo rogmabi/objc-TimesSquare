@@ -10,6 +10,7 @@
 #import "TSQCalendarRowCell.h"
 #import "TSQCalendarView.h"
 
+#import <QuartzCore/QuartzCore.h>
 
 @interface TSQCalendarRowCell ()
 
@@ -56,7 +57,7 @@
     NSMutableArray *dayButtons = [NSMutableArray arrayWithCapacity:self.daysInWeek];
     for (NSUInteger index = 0; index < self.daysInWeek; index++) {
         UIButton *button = [[UIButton alloc] initWithFrame:self.contentView.bounds];
-        [button addTarget:self action:@selector(dateButtonPressed:) forControlEvents:UIControlEventTouchDown];
+        [button addTarget:self action:@selector(dateButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [dayButtons addObject:button];
         [self.contentView addSubview:button];
         [self configureButton:button];
@@ -85,12 +86,15 @@
 - (void)createTodayButton;
 {
     self.todayButton = [[UIButton alloc] initWithFrame:self.contentView.bounds];
+//    self.todayButton.layer.cornerRadius = self.todayButton.frame.size.width/2.0;
+//    self.todayButton.clipsToBounds = YES;
     [self.contentView addSubview:self.todayButton];
     [self configureButton:self.todayButton];
-    [self.todayButton addTarget:self action:@selector(todayButtonPressed:) forControlEvents:UIControlEventTouchDown];
+    [self.todayButton addTarget:self action:@selector(todayButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    [self.todayButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.todayButton setBackgroundImage:[self todayBackgroundImage] forState:UIControlStateNormal];
+    [self.todayButton setTitleColor:[UIColor colorWithRed:0.163 green:0.574 blue:0.950 alpha:1.000] forState:UIControlStateNormal];
+//    [self.todayButton setBackgroundImage:[self todayBackgroundImage] forState:UIControlStateNormal];
+    self.todayButton.backgroundColor = [UIColor darkGrayColor];
     [self.todayButton setTitleShadowColor:[UIColor colorWithWhite:0.0f alpha:0.75f] forState:UIControlStateNormal];
 
     self.todayButton.titleLabel.shadowOffset = CGSizeMake(0.0f, -1.0f / [UIScreen mainScreen].scale);
@@ -99,6 +103,10 @@
 - (void)createSelectedButton;
 {
     self.selectedButton = [[UIButton alloc] initWithFrame:self.contentView.bounds];
+//    CGFloat cornerRadius = self.selectedButton.frame.size.width/2.0;
+//    self.selectedButton.layer.cornerRadius = cornerRadius;
+//    self.selectedButton.clipsToBounds = YES;
+    
     [self.contentView addSubview:self.selectedButton];
     [self configureButton:self.selectedButton];
     
@@ -106,7 +114,8 @@
     
     self.selectedButton.enabled = NO;
     [self.selectedButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.selectedButton setBackgroundImage:[self selectedBackgroundImage] forState:UIControlStateNormal];
+    self.selectedButton.backgroundColor = [UIColor darkGrayColor];
+//    [self.selectedButton setBackgroundImage:[self selectedBackgroundImage] forState:UIControlStateNormal];
     [self.selectedButton setTitleShadowColor:[UIColor colorWithWhite:0.0f alpha:0.75f] forState:UIControlStateNormal];
     
     self.selectedButton.titleLabel.shadowOffset = CGSizeMake(0.0f, -1.0f / [UIScreen mainScreen].scale);
