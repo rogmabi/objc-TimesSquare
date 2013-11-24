@@ -62,6 +62,17 @@
         [self.contentView addSubview:button];
         [self configureButton:button];
         [button setTitleColor:[self.textColor colorWithAlphaComponent:0.5f] forState:UIControlStateDisabled];
+        
+        if (index == 0) {
+            // Sunday
+            [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+            [button setBackgroundColor:[UIColor colorWithRed:0.851 green:0.214 blue:0.031 alpha:1.000]];
+        }
+        else if (index == 6) {
+            // Saturday
+            [button setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+            [button setBackgroundColor:[UIColor colorWithRed:0.163 green:0.574 blue:0.950 alpha:1.000]];
+        }
     }
     self.dayButtons = dayButtons;
 }
