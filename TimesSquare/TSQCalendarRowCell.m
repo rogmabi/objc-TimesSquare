@@ -33,7 +33,7 @@
 
 @implementation TSQCalendarRowCell
 
-- (id)initWithCalendar:(NSCalendar *)calendar reuseIdentifier:(NSString *)reuseIdentifier;
+- (id)initWithCalendar:(NSCalendar *)calendar reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithCalendar:calendar reuseIdentifier:reuseIdentifier];
     if (!self) {
@@ -43,9 +43,19 @@
     return self;
 }
 
+- (UIFont *)dayOfMonthFont
+{
+    return [UIFont boldSystemFontOfSize:19.0f];
+}
+
+- (UIColor *)todayTextColor
+{
+    return [UIColor whiteColor];
+}
+
 - (void)configureButton:(UIButton *)button;
 {
-    button.titleLabel.font = [UIFont boldSystemFontOfSize:19.f];
+    button.titleLabel.font = [self dayOfMonthFont];
     button.titleLabel.shadowOffset = self.shadowOffset;
     button.adjustsImageWhenDisabled = NO;
     [button setTitleColor:self.textColor forState:UIControlStateNormal];
@@ -67,7 +77,7 @@
             // Sunday
             [button setTitleColor:[UIColor colorWithRed:0.851 green:0.214 blue:0.031 alpha:1.000] forState:UIControlStateNormal];
 //            [button setBackgroundColor:[UIColor colorWithRed:0.851 green:0.214 blue:0.031 alpha:1.000]];
-        }
+    }
         else if (index == 6) {
             // Saturday
             [button setTitleColor:[UIColor colorWithRed:0.163 green:0.574 blue:0.950 alpha:1.000] forState:UIControlStateNormal];
@@ -85,11 +95,10 @@
         [notThisMonthButtons addObject:button];
         [self.contentView addSubview:button];
         [self configureButton:button];
-
+        [button setTitleColor:[self.textColor colorWithAlphaComponent:0.5f] forState:UIControlStateDisabled];
         button.enabled = NO;
         UIColor *backgroundPattern = [UIColor colorWithPatternImage:[self notThisMonthBackgroundImage]];
         button.backgroundColor = backgroundPattern;
-        button.titleLabel.backgroundColor = backgroundPattern;
     }
     self.notThisMonthButtons = notThisMonthButtons;
 }
@@ -97,15 +106,12 @@
 - (void)createTodayButton;
 {
     self.todayButton = [[UIButton alloc] initWithFrame:self.contentView.bounds];
-//    self.todayButton.layer.cornerRadius = self.todayButton.frame.size.width/2.0;
-//    self.todayButton.clipsToBounds = YES;
     [self.contentView addSubview:self.todayButton];
     [self configureButton:self.todayButton];
     [self.todayButton addTarget:self action:@selector(todayButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    [self.todayButton setTitleColor:[UIColor colorWithRed:0.163 green:0.574 blue:0.950 alpha:1.000] forState:UIControlStateNormal];
-//    [self.todayButton setBackgroundImage:[self todayBackgroundImage] forState:UIControlStateNormal];
-    self.todayButton.backgroundColor = [UIColor darkGrayColor];
+    [self.todayButton setTitleColor:[self todayTextColor] forState:UIControlStateNormal];
+    [self.todayButton setBackgroundImage:[self todayBackgroundImage] forState:UIControlStateNormal];
     [self.todayButton setTitleShadowColor:[UIColor colorWithWhite:0.0f alpha:0.75f] forState:UIControlStateNormal];
 
     self.todayButton.titleLabel.shadowOffset = CGSizeMake(0.0f, -1.0f / [UIScreen mainScreen].scale);
@@ -125,8 +131,7 @@
     
     self.selectedButton.enabled = NO;
     [self.selectedButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.selectedButton.backgroundColor = [UIColor darkGrayColor];
-//    [self.selectedButton setBackgroundImage:[self selectedBackgroundImage] forState:UIControlStateNormal];
+    [self.selectedButton setBackgroundImage:[self selectedBackgroundImage] forState:UIControlStateNormal];
     [self.selectedButton setTitleShadowColor:[UIColor colorWithWhite:0.0f alpha:0.75f] forState:UIControlStateNormal];
     
     self.selectedButton.titleLabel.shadowOffset = CGSizeMake(0.0f, -1.0f / [UIScreen mainScreen].scale);
@@ -224,7 +229,13 @@
     
     [super layoutSubviews];
     
-    self.backgroundView.frame = self.bounds;
+    // Size the background view with horizontal insets
+    CGRect bounds = self.bounds;
+    UIEdgeInsets insets = self.calendarView.contentInset;
+    CGRect insetRect = UIEdgeInsetsInsetRect(bounds, insets);
+    insetRect.origin.y = bounds.origin.y;
+    insetRect.size.height = bounds.size.height;
+    self.backgroundView.frame = insetRect;
 }
 
 - (void)layoutViewsForColumnAtIndex:(NSUInteger)index inRect:(CGRect)rect;
