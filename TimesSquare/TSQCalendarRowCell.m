@@ -39,6 +39,7 @@
     if (!self) {
         return nil;
     }
+    _todayBackgroundImage = [UIImage imageNamed:@"CalendarTodaysDate"];
     
     return self;
 }
