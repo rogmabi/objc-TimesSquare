@@ -40,6 +40,7 @@
         return nil;
     }
     _todayBackgroundImage = [UIImage imageNamed:@"CalendarTodaysDate"];
+    _selectedBackgroundImage = [UIImage imageNamed:@"CalendarSelectedDate"];
     
     return self;
 }
